@@ -10,6 +10,6 @@ pub struct Planet01Plugin;
 impl Plugin for Planet01Plugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_world.after(setup))
-            .add_systems(Update, grow_flower.after(setup_world));
+            .add_systems(Update, grow_flower);
     }
 }

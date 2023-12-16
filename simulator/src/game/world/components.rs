@@ -1,6 +1,8 @@
+use bevy::ecs::entity::Entity;
 use bevy::{
     math::Vec3,
     prelude::{Component, Resource, Timer},
+    transform::components::Transform,
 };
 
 pub const FIELD_1_FLOWERS_ROW: i32 = 20;
@@ -18,6 +20,7 @@ pub struct FlowerField {
     pub field_pos: Vec3,
     pub positions: Vec<Vec3>,
     pub flowers: Vec<Flower>,
+    pub flower_entities: Vec<Entity>,
 }
 
 #[derive(Component, Clone, Debug)]
@@ -44,4 +47,9 @@ pub struct FlowerFields {
 pub struct WhatFlowers {
     pub what_flowers_f_1: Vec<Flower>,
     pub what_flowers_f_2: Vec<Flower>,
+}
+
+#[derive(Resource, Default, Debug)]
+pub struct FlowerTransforms {
+    pub flower_transforms: Vec<Transform>,
 }

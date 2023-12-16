@@ -3,7 +3,7 @@
 
 use crate::game::{
     player::components::*,
-    world::components::{Flower, FlowerField, FlowerFields, Ground, Type},
+    world::components::{FlowerField, FlowerFields, Ground, Type},
 };
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
@@ -271,24 +271,19 @@ pub fn collect_flowers(
     in_field: Res<InField>,
     player_q: Query<&Transform, With<Player>>,
     tool_q: Query<&Collector>,
-    flower_que: Query<&Flower, With<Flower>>,
     mut flowerfields: ResMut<FlowerFields>,
     mut event_reader: EventReader<Collect>,
     mut pollen_res: ResMut<Pollen>,
-    mut flower_q: Query<&mut Transform, (With<Flower>, Without<Player>)>,
 ) {
     for _event in event_reader.read() {
-        let mut which_flower_id_plus = 0;
-        let mut which_field: usize = 0;
         if in_field.is_in_field {
+            let mut which_field: usize = 0;
             match in_field.which_field.as_str() {
                 "field_1" => {
                     which_field = 0;
-                    which_flower_id_plus = 0
                 }
                 "field_2" => {
                     which_field = 1;
-                    which_flower_id_plus = 260
                 }
                 _ => println!(
                     "Field {} has a typo or I forgot to add it!",
@@ -296,80 +291,38 @@ pub fn collect_flowers(
                 ),
             };
 
-            let player_position = player_q.single().translation;
+            // === Variables ===
 
+            let player_position = player_q.single().translation;
             let mut vec_i_want: Vec3 = player_position;
-            let poses = flowerfields.flower_fields[which_field].positions.clone();
             vec_i_want.y -= 0.5;
+            let current_field = &mut flowerfields.flower_fields[which_field];
+            let poses = &current_field.positions;
+            let field_position = &current_field.field_pos;
+            let tool = tool_q.single();
 
             for (what_flower, &position) in poses.iter().enumerate() {
-                let field_position = flowerfields.flower_fields[which_field].field_pos;
+                let distance = vec_i_want.distance(position + *field_position);
 
-                let distance = vec_i_want.distance(position + field_position); // Calculate distance
-
-                if (distance < 1.65)
-                    && (flowerfields.flower_fields[which_field].flowers[what_flower].stage > 0)
-                {
-                    let tool = tool_q.single();
+                if (distance < 1.65) && (current_field.flowers[what_flower].stage > 0) {
                     let mut how_much_pollen: i32 = 0;
                     let mut times_cause_color: i32 = 1;
 
-                    match flowerfields.flower_fields[which_field].flowers[what_flower].flower_type {
+                    match current_field.flowers[what_flower].flower_type {
                         Type::White => times_cause_color = tool.collect_amount_white as i32,
                         Type::Blue => times_cause_color = tool.collect_amount_blue as i32,
                         Type::Red => times_cause_color = tool.collect_amount_red as i32,
                     };
 
-                    how_much_pollen = flowerfields.flower_fields[which_field].flowers[what_flower]
-                        .how_many as i32
+                    how_much_pollen = current_field.flowers[what_flower].how_many as i32
                         * tool.collect_amount as i32
                         * times_cause_color;
 
                     pollen_res.pollen_in_backpack += how_much_pollen as i64;
 
-                    //      ==================
-                    //      === Other Part ===
-                    //      ==================
-
-                    for (count, mut flower_transform) in flower_q.iter_mut().enumerate() {
-                        if count as i32 == what_flower as i32 + which_flower_id_plus {
-                            let flower_t = &mut *flower_transform; // Dereference Mut to get &mut Transform
-
-                            flower_gets_harvested(
-                                &mut flowerfields.flower_fields[which_field].flowers[what_flower],
-                                flower_t,
-                                &flower_que,
-                            );
-
-                            break;
-                        }
-                    }
+                    current_field.flowers[what_flower].stage -= 1;
                 }
             }
         }
     }
-}
-
-fn flower_gets_harvested(
-    flower: &mut Flower,
-    flower_entity: &mut Transform,
-    flower_q: &Query<&Flower, With<Flower>>,
-) {
-    flower.stage -= 1;
-    //for flower_p in flower_q.iter() {
-    //    println!("{:?}", flower_p);
-    //}
-    /*
-    let mut y_pos: f32 = 0.0;
-
-    match flower.stage as i32 {
-        3 => y_pos = 0.0,
-        2 => y_pos = -0.15,
-        1 => y_pos = -0.3,
-        0 => y_pos = -0.55,
-        _ => println!("Shit"),
-    };
-
-    flower_entity.translation.y = y_pos;
-    */
 }

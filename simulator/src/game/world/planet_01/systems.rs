@@ -89,6 +89,7 @@ pub fn setup_world(
         field_pos: vec3(0.0, 0.01, 15.0),
         positions: Vec::new(),
         flowers: Vec::new(),
+        flower_entities: Vec::new(),
     };
 
     let mut flower_field_2 = FlowerField {
@@ -96,6 +97,7 @@ pub fn setup_world(
         field_pos: vec3(0.0, 0.01, -15.0),
         positions: Vec::new(),
         flowers: Vec::new(),
+        flower_entities: Vec::new(),
     };
 
     let ground = (
@@ -152,14 +154,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[0].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[0].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[0].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[0].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         } else if one_two_three < 90 {
                             flower_field_1.flowers.push(flowers[1].clone());
                             flower_field_1.positions.push(Vec3 {
@@ -168,14 +173,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[1].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[1].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[1].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[1].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         } else {
                             flower_field_1.flowers.push(flowers[2].clone());
                             flower_field_1.positions.push(Vec3 {
@@ -184,14 +192,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[2].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[2].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[2].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[2].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         }
                     } else if white_blue_red < 85 {
                         if one_two_three < 70 {
@@ -202,14 +213,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[3].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[3].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[3].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[3].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         } else if one_two_three < 90 {
                             flower_field_1.flowers.push(flowers[4].clone());
                             flower_field_1.positions.push(Vec3 {
@@ -218,14 +232,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[4].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[4].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[4].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[4].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         } else {
                             flower_field_1.flowers.push(flowers[5].clone());
                             flower_field_1.positions.push(Vec3 {
@@ -234,14 +251,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[5].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[5].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[5].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[5].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         }
                     } else if white_blue_red <= 100 {
                         if one_two_three < 70 {
@@ -252,14 +272,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[6].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[6].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[6].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[6].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         } else if one_two_three < 90 {
                             flower_field_1.flowers.push(flowers[7].clone());
                             flower_field_1.positions.push(Vec3 {
@@ -268,14 +291,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[7].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[7].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[7].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[7].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         } else {
                             flower_field_1.flowers.push(flowers[8].clone());
                             flower_field_1.positions.push(Vec3 {
@@ -284,14 +310,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[8].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[8].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[8].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[8].clone(),
+                                ))
+                                .id();
+                            flower_field_1.flower_entities.push(flower);
                         }
                     }
                 }
@@ -332,14 +361,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[0].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[0].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[0].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[0].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         } else if one_two_three < 90 {
                             flower_field_2.flowers.push(flowers[1].clone());
                             flower_field_2.positions.push(Vec3 {
@@ -348,14 +380,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[1].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[1].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[1].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[1].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         } else {
                             flower_field_2.flowers.push(flowers[2].clone());
                             flower_field_2.positions.push(Vec3 {
@@ -364,14 +399,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[2].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[2].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[2].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[2].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         }
                     } else if white_blue_red < 85 {
                         if one_two_three < 70 {
@@ -382,14 +420,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[3].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[3].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[3].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[3].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         } else if one_two_three < 90 {
                             flower_field_2.flowers.push(flowers[4].clone());
                             flower_field_2.positions.push(Vec3 {
@@ -398,14 +439,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[4].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[4].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[4].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[4].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         } else {
                             flower_field_2.flowers.push(flowers[5].clone());
                             flower_field_2.positions.push(Vec3 {
@@ -414,14 +458,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[5].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[5].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[5].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[5].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         }
                     } else if white_blue_red <= 100 {
                         if one_two_three < 70 {
@@ -432,14 +479,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[6].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[6].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[6].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[6].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         } else if one_two_three < 90 {
                             flower_field_2.flowers.push(flowers[7].clone());
                             flower_field_2.positions.push(Vec3 {
@@ -448,14 +498,17 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[7].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[7].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[7].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[7].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         } else {
                             flower_field_2.flowers.push(flowers[8].clone());
                             flower_field_2.positions.push(Vec3 {
@@ -464,22 +517,23 @@ pub fn setup_world(
                                 z: y_value,
                             });
 
-                            parent.spawn((
-                                SceneBundle {
-                                    scene: flower_meshes[8].clone(),
-                                    transform: Transform::from_xyz(x_value, 0.0, y_value),
-                                    ..Default::default()
-                                },
-                                flowers[8].clone(),
-                            ));
+                            let flower = parent
+                                .spawn((
+                                    SceneBundle {
+                                        scene: flower_meshes[8].clone(),
+                                        transform: Transform::from_xyz(x_value, 0.0, y_value),
+                                        ..Default::default()
+                                    },
+                                    flowers[8].clone(),
+                                ))
+                                .id();
+                            flower_field_2.flower_entities.push(flower);
                         }
                     }
                 }
             }
         });
 
-    //flower_fields_res.flower_fields.push(flower_field_1.clone());
-    //flower_fields_res.flower_fields.push(flower_field_2.clone());
     flower_fields_res.flower_fields.push(flower_field_1);
     flower_fields_res.flower_fields.push(flower_field_2);
 
@@ -490,19 +544,12 @@ pub fn setup_world(
 }
 
 pub fn grow_flower(
-    mut flower_transform_q: Query<&mut Transform, With<Flower>>,
     mut flowerfields_res: ResMut<FlowerFields>,
-
+    mut trans_q: Query<&mut Transform, With<Flower>>,
     time: Res<Time>,
 ) {
-    let mut list_transforms: Vec<Transform> = Vec::new();
-
-    for transform in flower_transform_q.iter_mut() {
-        list_transforms.push(*transform);
-    }
-    let mut count = 0;
-    for flowerfields_iter in flowerfields_res.flower_fields.iter_mut() {
-        for flower in flowerfields_iter.flowers.iter_mut() {
+    for fields in flowerfields_res.flower_fields.iter_mut() {
+        for (count, flower) in fields.flowers.iter_mut().enumerate() {
             if flower.stage < 3 {
                 flower.timer.tick(time.delta());
 
@@ -517,16 +564,12 @@ pub fn grow_flower(
                 3 => y_pos = 0.0,
                 2 => y_pos = -0.15,
                 1 => y_pos = -0.3,
-                0 => y_pos = -0.45,
+                0 => y_pos = -0.55,
                 _ => println!("You Fucked Up xD"),
             };
 
-            //flowerfields_iter.positions[count].y = y_pos;
-
-            list_transforms[count].translation.y = y_pos;
-            // current flower transform.translation.y = y_pos
-
-            count += 1;
+            let mut transform = trans_q.get_mut(fields.flower_entities[count]).unwrap();
+            transform.translation.y = y_pos;
         }
     }
 }
