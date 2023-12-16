@@ -1,8 +1,9 @@
 #![allow(unused_assignments)]
+#![allow(clippy::too_many_arguments)]
 
 use crate::game::{
     player::components::*,
-    world::components::{FlowerField, FlowerFields, Ground, Type},
+    world::components::{Flower, FlowerField, FlowerFields, Ground, Type},
 };
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
@@ -16,10 +17,15 @@ pub fn setup(
 ) {
     let player_mesh: Handle<Scene> = asset_server.load("meshes/player.glb#Scene0");
 
-    let tool_data = vec![
-        ("Shovel", 1, 1, 1, 1, "meshes/shovel.glb#Scene0"),
-        // Add more tools as needed
-    ];
+    let tools: Vec<Collector> = vec![Collector {
+        name: "Shovel".to_string(),
+        collect_amount: 1,
+        collect_amount_white: 1,
+        collect_amount_blue: 1,
+        collect_amount_red: 1,
+        mesh_handle: asset_server.load("meshes/shovel.glb#Scene0"),
+        can_swing: true,
+    }];
 
     let player = commands
         .spawn((
@@ -31,6 +37,10 @@ pub fn setup(
             Player {},
             ThirdPersonCameraTarget,
             RigidBody::Dynamic,
+            Velocity {
+                linvel: Vec3::new(0.0, 0.0, 0.0),
+                angvel: Vec3::new(0.0, 0.0, 0.0),
+            },
             Sleeping {
                 sleeping: false,
                 ..Default::default()
@@ -72,33 +82,14 @@ pub fn setup(
             Speed(5.0),
         ))
         .with_children(|p| {
-            for (
-                name,
-                collect_amount,
-                collect_amount_white,
-                collect_amount_blue,
-                collect_amount_red,
-                mesh_path,
-            ) in tool_data
-            {
-                let mesh_handle = asset_server.load(mesh_path);
-                p.spawn((
-                    SceneBundle {
-                        scene: asset_server.load(mesh_path),
-                        transform: Transform::from_xyz(0.7, 0.3, 0.0),
-                        ..Default::default()
-                    },
-                    Collector {
-                        name: name.to_string(),
-                        collect_amount,
-                        collect_amount_white,
-                        collect_amount_blue,
-                        collect_amount_red,
-                        mesh_handle,
-                        can_swing: true,
-                    },
-                ));
-            }
+            p.spawn((
+                SceneBundle {
+                    scene: tools[0].mesh_handle.clone(),
+                    transform: Transform::from_xyz(0.7, 0.3, 0.0),
+                    ..Default::default()
+                },
+                tools[0].clone(),
+            ));
         })
         .insert(Ccd::enabled())
         .id();
@@ -178,7 +169,6 @@ pub fn player_movement(
 
         player_transform.translation += movement;
 
-        // rotate player to face direction he is currently moving
         if direction.length_squared() > 0.0 {
             player_transform.look_to(direction, Vec3::Y);
         }
@@ -281,34 +271,45 @@ pub fn collect_flowers(
     in_field: Res<InField>,
     player_q: Query<&Transform, With<Player>>,
     tool_q: Query<&Collector>,
-    flowerfields: Res<FlowerFields>,
+    flower_que: Query<&Flower, With<Flower>>,
+    mut flowerfields: ResMut<FlowerFields>,
     mut event_reader: EventReader<Collect>,
     mut pollen_res: ResMut<Pollen>,
+    mut flower_q: Query<&mut Transform, (With<Flower>, Without<Player>)>,
 ) {
     for _event in event_reader.read() {
+        let mut which_flower_id_plus = 0;
         let mut which_field: usize = 0;
         if in_field.is_in_field {
             match in_field.which_field.as_str() {
-                "field_1" => which_field = 0,
-                "field_2" => which_field = 1,
-                _ => println!("Something went wronglol!"),
+                "field_1" => {
+                    which_field = 0;
+                    which_flower_id_plus = 0
+                }
+                "field_2" => {
+                    which_field = 1;
+                    which_flower_id_plus = 260
+                }
+                _ => println!(
+                    "Field {} has a typo or I forgot to add it!",
+                    in_field.which_field
+                ),
             };
 
             let player_position = player_q.single().translation;
 
             let mut vec_i_want: Vec3 = player_position;
+            let poses = flowerfields.flower_fields[which_field].positions.clone();
             vec_i_want.y -= 0.5;
 
-            for (what_flower, &position) in flowerfields.flower_fields[which_field]
-                .positions
-                .iter()
-                .enumerate()
-            {
+            for (what_flower, &position) in poses.iter().enumerate() {
                 let field_position = flowerfields.flower_fields[which_field].field_pos;
 
                 let distance = vec_i_want.distance(position + field_position); // Calculate distance
 
-                if distance < 1.6 {
+                if (distance < 1.65)
+                    && (flowerfields.flower_fields[which_field].flowers[what_flower].stage > 0)
+                {
                     let tool = tool_q.single();
                     let mut how_much_pollen: i32 = 0;
                     let mut times_cause_color: i32 = 1;
@@ -325,8 +326,50 @@ pub fn collect_flowers(
                         * times_cause_color;
 
                     pollen_res.pollen_in_backpack += how_much_pollen as i64;
+
+                    //      ==================
+                    //      === Other Part ===
+                    //      ==================
+
+                    for (count, mut flower_transform) in flower_q.iter_mut().enumerate() {
+                        if count as i32 == what_flower as i32 + which_flower_id_plus {
+                            let flower_t = &mut *flower_transform; // Dereference Mut to get &mut Transform
+
+                            flower_gets_harvested(
+                                &mut flowerfields.flower_fields[which_field].flowers[what_flower],
+                                flower_t,
+                                &flower_que,
+                            );
+
+                            break;
+                        }
+                    }
                 }
             }
         }
     }
+}
+
+fn flower_gets_harvested(
+    flower: &mut Flower,
+    flower_entity: &mut Transform,
+    flower_q: &Query<&Flower, With<Flower>>,
+) {
+    flower.stage -= 1;
+    //for flower_p in flower_q.iter() {
+    //    println!("{:?}", flower_p);
+    //}
+    /*
+    let mut y_pos: f32 = 0.0;
+
+    match flower.stage as i32 {
+        3 => y_pos = 0.0,
+        2 => y_pos = -0.15,
+        1 => y_pos = -0.3,
+        0 => y_pos = -0.55,
+        _ => println!("Shit"),
+    };
+
+    flower_entity.translation.y = y_pos;
+    */
 }

@@ -1,6 +1,6 @@
 use bevy::{
     math::Vec3,
-    prelude::{Component, Resource},
+    prelude::{Component, Resource, Timer},
 };
 
 pub const FIELD_1_FLOWERS_ROW: i32 = 20;
@@ -25,6 +25,7 @@ pub struct Flower {
     pub flower_type: Type,
     pub stage: u8,
     pub how_many: u8,
+    pub timer: Timer,
 }
 
 #[derive(Clone, Debug)]

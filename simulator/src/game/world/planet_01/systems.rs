@@ -26,51 +26,61 @@ pub fn setup_world(
         asset_server.load("meshes/flower_red_2.glb#Scene0"),
         asset_server.load("meshes/flower_red_3.glb#Scene0"),
     ];
+
     let flowers: Vec<Flower> = vec![
         Flower {
             flower_type: Type::White,
             stage: 3,
             how_many: 1,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::White,
             stage: 3,
             how_many: 2,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::White,
             stage: 3,
             how_many: 3,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::Blue,
             stage: 3,
             how_many: 1,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::Blue,
             stage: 3,
             how_many: 2,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::Blue,
             stage: 3,
             how_many: 3,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::Red,
             stage: 3,
             how_many: 1,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::Red,
             stage: 3,
             how_many: 2,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
         Flower {
             flower_type: Type::Red,
             stage: 3,
             how_many: 3,
+            timer: Timer::from_seconds(10.0, TimerMode::Once),
         },
     ];
 
@@ -468,11 +478,55 @@ pub fn setup_world(
             }
         });
 
-    flower_fields_res.flower_fields.push(flower_field_1.clone());
-    flower_fields_res.flower_fields.push(flower_field_2.clone());
+    //flower_fields_res.flower_fields.push(flower_field_1.clone());
+    //flower_fields_res.flower_fields.push(flower_field_2.clone());
+    flower_fields_res.flower_fields.push(flower_field_1);
+    flower_fields_res.flower_fields.push(flower_field_2);
 
     commands.spawn(ground);
     commands.spawn(spawn);
 
     ambient_light.brightness = 0.8;
+}
+
+pub fn grow_flower(
+    mut flower_transform_q: Query<&mut Transform, With<Flower>>,
+    mut flowerfields_res: ResMut<FlowerFields>,
+
+    time: Res<Time>,
+) {
+    let mut list_transforms: Vec<Transform> = Vec::new();
+
+    for transform in flower_transform_q.iter_mut() {
+        list_transforms.push(*transform);
+    }
+    let mut count = 0;
+    for flowerfields_iter in flowerfields_res.flower_fields.iter_mut() {
+        for flower in flowerfields_iter.flowers.iter_mut() {
+            if flower.stage < 3 {
+                flower.timer.tick(time.delta());
+
+                if flower.timer.finished() {
+                    flower.stage += 1;
+                    flower.timer.reset();
+                }
+            }
+
+            let mut y_pos = 0.0;
+            match flower.stage {
+                3 => y_pos = 0.0,
+                2 => y_pos = -0.15,
+                1 => y_pos = -0.3,
+                0 => y_pos = -0.45,
+                _ => println!("You Fucked Up xD"),
+            };
+
+            //flowerfields_iter.positions[count].y = y_pos;
+
+            list_transforms[count].translation.y = y_pos;
+            // current flower transform.translation.y = y_pos
+
+            count += 1;
+        }
+    }
 }

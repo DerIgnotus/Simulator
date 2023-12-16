@@ -19,7 +19,7 @@ pub struct SwingTimer {
 #[derive(Resource)]
 pub struct PlayerAnimations(pub Vec<Handle<AnimationClip>>);
 
-#[derive(Component, Default)]
+#[derive(Component, Default, Clone)]
 pub struct Collector {
     pub name: String,
     pub collect_amount: u32,

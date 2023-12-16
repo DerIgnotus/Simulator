@@ -5,6 +5,7 @@ use bevy_third_person_camera::ThirdPersonCameraPlugin;
 use self::components::{Collect, Honey, InField, OnGround, Pollen};
 use self::inventory::InventoryPlugin;
 use self::ui::UiPlugin;
+use crate::game::world::planet_01::systems::setup_world;
 
 pub mod components;
 pub mod inventory;
@@ -24,16 +25,11 @@ impl Plugin for PlayerPlugin {
             .add_plugins(InventoryPlugin)
             .add_plugins(UiPlugin)
             .add_systems(Startup, setup)
-            .add_systems(Update, (player_movement,).after(setup))
+            .add_systems(Update, (player_movement).after(setup))
+            .add_systems(Update, (is_grounded, is_in_field).after(player_movement))
             .add_systems(
                 Update,
-                (
-                    is_grounded,
-                    is_in_field,
-                    collector_swinging_system,
-                    collect_flowers,
-                )
-                    .after(player_movement),
+                (collector_swinging_system, collect_flowers).after(setup_world),
             );
     }
 }
