@@ -1,3 +1,5 @@
+use crate::game::bee::components::*;
+use crate::game::flower::components::*;
 use crate::game::world::components::*;
 use bevy::{math::vec3, prelude::*};
 use bevy_rapier3d::prelude::*;
@@ -9,11 +11,14 @@ pub fn setup_world(
     mut ambient_light: ResMut<AmbientLight>,
     asset_server: Res<AssetServer>,
     mut flower_fields_res: ResMut<FlowerFields>,
+    mut hives_res: ResMut<Hives>,
 ) {
     let meshes: Vec<Handle<Scene>> = vec![
         asset_server.load("meshes/world.glb#Scene0"),
         asset_server.load("meshes/spawn.glb#Scene0"),
         asset_server.load("meshes/field_1.glb#Scene0"),
+        asset_server.load("meshes/hive_wall.glb#Scene0"),
+        asset_server.load("meshes/hive_hive.glb#Scene0"),
     ];
     let flower_meshes: Vec<Handle<Scene>> = vec![
         asset_server.load("meshes/flower_white_1.glb#Scene0"),
@@ -84,6 +89,11 @@ pub fn setup_world(
         },
     ];
 
+    let hive_pre = vec![Hive {
+        has_bee: false,
+        ..default()
+    }];
+
     let mut flower_field_1 = FlowerField {
         which_field: "field_1".to_string(),
         field_pos: vec3(0.0, 0.01, 15.0),
@@ -119,6 +129,37 @@ pub fn setup_world(
         RigidBody::Fixed,
         Ground {},
     );
+
+    commands
+        .spawn((
+            SceneBundle {
+                scene: meshes[3].clone(),
+                transform: Transform::from_xyz(0.0, 3.0, 5.0),
+                ..Default::default()
+            },
+            Collider::cuboid(2.5, 3.1, 0.3),
+            RigidBody::Fixed,
+        ))
+        .with_children(|parent| {
+            for row in 0..5 {
+                for column in 0..6 {
+                    let row_x = row as f32 - 2.0;
+                    let row_y = column as f32 - 2.8;
+                    let hive = parent
+                        .spawn((
+                            SceneBundle {
+                                scene: meshes[4].clone(),
+                                transform: Transform::from_xyz(row_x, row_y, 0.0),
+                                ..Default::default()
+                            },
+                            hive_pre[0].clone(),
+                        ))
+                        .id();
+                    hives_res.hives.push(hive);
+                    hives_res.hive_bees.push(hive_pre[0].clone());
+                }
+            }
+        });
 
     commands
         .spawn((

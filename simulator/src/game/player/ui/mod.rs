@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::game::player::systems::setup;
 
+pub mod components;
 mod systems;
 use self::systems::*;
 

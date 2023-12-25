@@ -1,8 +1,11 @@
+#[macro_use]
+extern crate lazy_static;
 use crate::systems::exit_system;
 use bevy::input::common_conditions::input_toggle_active;
 use bevy::prelude::*;
 use bevy::window::WindowTheme;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_mod_billboard::prelude::*;
 use bevy_rapier3d::prelude::*;
 use game::GamePlugin;
 
@@ -28,7 +31,7 @@ fn main() {
         .add_plugins(
             WorldInspectorPlugin::default().run_if(input_toggle_active(true, KeyCode::Escape)),
         )
-        .add_plugins(GamePlugin)
+        .add_plugins((GamePlugin, BillboardPlugin))
         .add_systems(Update, exit_system)
         .run();
 }

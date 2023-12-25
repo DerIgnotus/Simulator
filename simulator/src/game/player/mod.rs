@@ -24,12 +24,12 @@ impl Plugin for PlayerPlugin {
             .add_plugins(ThirdPersonCameraPlugin)
             .add_plugins(InventoryPlugin)
             .add_plugins(UiPlugin)
-            .add_systems(Startup, setup)
+            .add_systems(PreStartup, setup)
             .add_systems(Update, (player_movement).after(setup))
             .add_systems(Update, (is_grounded, is_in_field).after(player_movement))
             .add_systems(
                 Update,
-                (collector_swinging_system, collect_flowers).after(setup_world),
+                (collector_swinging_system, use_ability, collect_flowers).after(setup_world),
             );
     }
 }

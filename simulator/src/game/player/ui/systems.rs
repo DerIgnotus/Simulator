@@ -5,7 +5,9 @@ use crate::game::player::components::Pollen;
 pub fn setup_ui(mut commands: Commands) {
     commands.spawn(TextBundle {
         style: Style {
-            align_self: AlignSelf::FlexEnd,
+            align_self: AlignSelf::FlexStart, // Align the text to the start of the container (top)
+            position_type: PositionType::Absolute, // Use absolute positioning
+            right: Val::Percent(50.0),
             ..Default::default()
         },
         text: Text {
@@ -13,7 +15,7 @@ pub fn setup_ui(mut commands: Commands) {
                 TextSection {
                     value: "Pollen: ".to_string(),
                     style: TextStyle {
-                        font_size: 20.0,
+                        font_size: 50.0,
                         color: Color::WHITE,
                         ..Default::default()
                     },
@@ -21,7 +23,7 @@ pub fn setup_ui(mut commands: Commands) {
                 TextSection {
                     value: "".to_string(),
                     style: TextStyle {
-                        font_size: 20.0,
+                        font_size: 50.0,
                         color: Color::YELLOW, // Change color if needed
                         ..Default::default()
                     },

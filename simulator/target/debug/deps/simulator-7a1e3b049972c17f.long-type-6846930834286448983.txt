@@ -1,0 +1,1 @@
+for<'a, 'b, 'c, 'd, 'e> fn(bevy::prelude::ResMut<'a, game::world::components::FlowerFields>, bevy::prelude::Query<'b, 'c, &'d mut bevy::prelude::Transform, bevy::prelude::With<{type error}>>, bevy::prelude::Res<'e, bevy_time::Time>) {game::world::planet_01::systems::grow_flower}
