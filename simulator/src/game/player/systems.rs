@@ -36,7 +36,7 @@ pub fn setup(
         .spawn((
             SceneBundle {
                 scene: player_mesh,
-                transform: Transform::from_xyz(0.0, 2.0, 0.0),
+                transform: Transform::from_xyz(0.0, 4.0, 0.0),
                 ..Default::default()
             },
             Player {},

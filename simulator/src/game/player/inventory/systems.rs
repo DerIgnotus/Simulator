@@ -105,7 +105,8 @@ pub fn inventory_setup(mut commands: Commands) {
                                     NodeBundle {
                                         style: Style {
                                             flex_direction: FlexDirection::Column,
-                                            align_items: AlignItems::Center,
+                                            align_items: AlignItems::Start,
+                                            left: Val::Px(5.),
                                             ..default()
                                         },
                                         ..default()
@@ -151,6 +152,7 @@ pub fn display_inventory_items(
     mut count_text_entities: Local<HashMap<String, Entity>>, // Keep track of count text entities
     inventory_query: Query<Entity, With<ParentInv>>,
     mut text_query: Query<&mut Text, With<CountText>>,
+    asset_server: Res<AssetServer>,
 ) {
     if let Ok(global_inventory) = GLOBAL_INVENTORY.lock() {
         for parent_entity in inventory_query.iter() {
@@ -169,28 +171,51 @@ pub fn display_inventory_items(
                         .entity(parent_entity)
                         .with_children(|parent_spawn| {
                             // Display item name and count
-                            let count_entity = parent_spawn
-                                .spawn(TextBundle {
-                                    text: Text {
-                                        sections: vec![TextSection {
-                                            value: print.clone(),
-                                            style: TextStyle {
-                                                font_size: 35.0,
-                                                // Add other text styling if needed
-                                                ..Default::default()
-                                            },
-                                        }],
-                                        // Add other text properties if needed
+
+                            parent_spawn
+                                .spawn(NodeBundle {
+                                    style: Style {
+                                        flex_direction: FlexDirection::Row,
                                         ..Default::default()
                                     },
-                                    // Add other bundle properties if needed
                                     ..Default::default()
                                 })
-                                .insert(CountText {})
-                                .id();
+                                .with_children(|item_spawn| {
+                                    item_spawn.spawn(ImageBundle {
+                                        image: asset_server.load(item.image.clone()).into(),
+                                        ..Default::default()
+                                    });
+
+                                    let count_entity = item_spawn
+                                        .spawn(TextBundle {
+                                            text: Text {
+                                                sections: vec![TextSection {
+                                                    value: print.clone(),
+                                                    style: {
+                                                        TextStyle {
+                                                            font_size: 20.0,
+                                                            // Add other text styling if needed
+                                                            ..Default::default()
+                                                        }
+                                                    },
+                                                }],
+                                                ..Default::default()
+                                            },
+                                            style: Style {
+                                                left: Val::Px(10.0),
+                                                top: Val::Px(20.0),
+                                                ..Default::default()
+                                            },
+                                            ..Default::default()
+                                        })
+                                        .insert(CountText {})
+                                        .id();
+
+                                    count_text_entities.insert(item.name.clone(), count_entity);
+                                });
 
                             // Add the displayed count text entity to the HashMap
-                            count_text_entities.insert(item.name.clone(), count_entity);
+
                             displayed_items.insert(item.name.clone());
 
                             // Display item description
@@ -199,12 +224,16 @@ pub fn display_inventory_items(
                                     sections: vec![TextSection {
                                         value: description,
                                         style: TextStyle {
-                                            font_size: 20.0,
+                                            font_size: 15.0,
                                             // Add other text styling if needed
                                             ..Default::default()
                                         },
                                     }],
                                     // Add other text properties if needed
+                                    ..Default::default()
+                                },
+                                style: Style {
+                                    top: Val::Px(-5.0),
                                     ..Default::default()
                                 },
                                 // Add other bundle properties if needed

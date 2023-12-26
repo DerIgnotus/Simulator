@@ -31,18 +31,18 @@ lazy_static! {
         name: "Blueberry".to_string(),
         count: 1,
         description: "A blue eddible berry".to_string(),
-        image: "No Image".to_string(),
+        image: "sprites/blueberry.png".to_string(),
     };
     pub static ref ITEM_R: Item = Item {
         name: "Strawberry".to_string(),
         count: 1,
         description: "A red eddible berry".to_string(),
-        image: "No Image".to_string(),
+        image: "sprites/strawberry.png".to_string(),
     };
     pub static ref ITEM_W: Item = Item {
         name: "Sunflower".to_string(),
         count: 1,
         description: "A seed to grow a Sunflower".to_string(),
-        image: "No Image".to_string(),
+        image: "sprites/sunflower_seed.png".to_string(),
     };
 }
