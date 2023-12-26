@@ -47,10 +47,18 @@ pub fn collect_flower(
                 description: "A red eddible berry".to_string(),
                 image: "No Image".to_string(),
             };
+            let item_w = Item {
+                name: "Sunflower".to_string(),
+                count: 1,
+                description: "A seed to grow a Sunflower".to_string(),
+                image: "No Image".to_string(),
+            };
             if event.flower_type == Type::Blue {
                 inventory.add_item(item_b.clone());
             } else if event.flower_type == Type::Red {
                 inventory.add_item(item_r.clone());
+            } else {
+                inventory.add_item(item_w.clone());
             }
         }
     }
