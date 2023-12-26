@@ -1,5 +1,5 @@
+use crate::game::flower::components::*;
 use crate::game::player::components::*;
-use crate::game::player::inventory::components::Item;
 use crate::game::player::inventory::systems::*;
 use crate::game::player::ui::components::*;
 use crate::game::world::components::FlowerFields;
@@ -35,30 +35,13 @@ pub fn collect_flower(
 
         if give_berry > 70 {
             let mut inventory = GLOBAL_INVENTORY.lock().unwrap();
-            let item_b = Item {
-                name: "Blueberry".to_string(),
-                count: 1,
-                description: "A blue eddible berry".to_string(),
-                image: "No Image".to_string(),
-            };
-            let item_r = Item {
-                name: "Strawberry".to_string(),
-                count: 1,
-                description: "A red eddible berry".to_string(),
-                image: "No Image".to_string(),
-            };
-            let item_w = Item {
-                name: "Sunflower".to_string(),
-                count: 1,
-                description: "A seed to grow a Sunflower".to_string(),
-                image: "No Image".to_string(),
-            };
+
             if event.flower_type == Type::Blue {
-                inventory.add_item(item_b.clone());
+                inventory.add_item(ITEM_B.clone());
             } else if event.flower_type == Type::Red {
-                inventory.add_item(item_r.clone());
+                inventory.add_item(ITEM_R.clone());
             } else {
-                inventory.add_item(item_w.clone());
+                inventory.add_item(ITEM_W.clone());
             }
         }
     }
